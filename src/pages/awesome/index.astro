@@ -38,7 +38,7 @@ const itemListSchema = {
   name: 'Awesome AECO Directory',
   description:
     'A curated list of open-source tools, libraries, and resources for Architecture, Engineering, Construction, and Operations (AECO).',
-  url: 'https://awesome-aeco.github.io/awesome/',
+  url: 'https://awesome-aeco.org/awesome/',
   license: 'https://creativecommons.org/publicdomain/zero/1.0/',
   numberOfItems: catalog.entries.length,
   itemListElement: catalog.entries.map((entry, idx) => ({
@@ -60,7 +60,7 @@ const faqSchema =
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         name: 'Awesome AECO FAQ',
-        url: 'https://awesome-aeco.github.io/awesome/#faq',
+        url: 'https://awesome-aeco.org/awesome/#faq',
         mainEntity: faqItems.map((item) => ({
           '@type': 'Question',
           name: item.question,

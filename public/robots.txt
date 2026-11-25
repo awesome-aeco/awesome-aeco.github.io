@@ -14,4 +14,4 @@ User-agent: Google-Extended
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://awesome-aeco.github.io/sitemap-index.xml
+Sitemap: https://awesome-aeco.org/sitemap-index.xml

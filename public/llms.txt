@@ -4,21 +4,22 @@
 
 ## Directory & Machine-Readable Data
 
-- [Awesome AECO Directory (web)](https://awesome-aeco.github.io/awesome/): Searchable, filterable web directory of 212+ curated AECO tools.
-- [Structured Catalog (JSON)](https://awesome-aeco.github.io/data/catalog.json): Enriched JSON dataset with GitHub stars, licenses, primary languages, tags, and archived status (CC BY 4.0).
+- [Awesome AECO Directory (web)](https://awesome-aeco.org/awesome/): Searchable, filterable web directory of 212+ curated AECO tools.
+- [Structured Catalog (JSON)](https://awesome-aeco.org/data/catalog.json): Enriched JSON dataset with GitHub stars, licenses, primary languages, tags, and archived status (CC BY 4.0).
 - [readme.md (raw Markdown)](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/readme.md): Canonical curated list in plain Markdown (CC0 1.0).
-- [Weekly Movers & Shakers](https://awesome-aeco.github.io/movers/): Weekly star velocity, new additions, and archived repo alerts.
+- [Weekly Movers & Shakers](https://awesome-aeco.org/movers/): Weekly star velocity, new additions, and archived repo alerts.
 
 ## For AI Agents & Contributors
 
-- [AI & Developer Hub](https://awesome-aeco.github.io/ai/): Integration guide for `catalog.json`, `llms.txt`, and upcoming MCP server.
+- [AI & Developer Hub](https://awesome-aeco.org/ai/): Integration guide for `catalog.json`, `llms.txt`, and `awesome-aeco-mcp`.
+- [MCP Server (remote HTTP)](https://mcp.awesome-aeco.org/mcp): Hosted stateless Streamable HTTP MCP server (`npx -y awesome-aeco-mcp` also available).
 - [Agent instructions](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/AGENTS.md): Rules and checklists for AI agents proposing changes.
 - [Contribution guidelines](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/contributing.md): Inclusion criteria and exact 3-line entry format.
 - [Add-entry prompt template](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/prompts/add-entry.md): Ready-made prompt for verifying a resource and opening a PR.
 
 ## Brand & Governance
 
-- [Brand Kit](https://awesome-aeco.github.io/brand/): Official logos, color tokens, OpenGraph card, and embeddable badges.
+- [Brand Kit](https://awesome-aeco.org/brand/): Official logos, color tokens, OpenGraph card, and embeddable badges.
 - [Trademark & Brand Policy](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/TRADEMARK.md): Usage terms for the Awesome AECO name, logos, and badges.
 - [Repository](https://github.com/awesome-aeco/Awesome-AECO): Source list, issues, and pull requests.
 - [License (CC0 1.0)](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/LICENSE): Public-domain dedication for the curated list content.

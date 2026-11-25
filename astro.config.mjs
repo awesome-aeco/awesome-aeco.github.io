@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://awesome-aeco.github.io',
+  site: 'https://awesome-aeco.org',
   output: 'static',
   trailingSlash: 'always',
   integrations: [
