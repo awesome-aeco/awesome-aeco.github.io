@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy — Awesome AECO"
+  description="Privacy policy for Awesome AECO website, catalog.json endpoint, and the awesome-aeco-mcp server."
+  canonicalPath="/privacy/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p>
+        Last updated: November 26, 2026. Applies to <code>awesome-aeco.org</code>,
+        <code>catalog.json</code>, and the hosted <code>awesome-aeco-mcp</code> server at
+        <code>https://mcp.awesome-aeco.org/mcp</code>.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container" style="max-width: 780px;">
+      <article class="card" style="margin-block-end: 1.5rem;">
+        <h2>1. No Accounts, No Tracking, No Personal Data Storage</h2>
+        <p>
+          Awesome AECO and <code>awesome-aeco-mcp</code> are public, read-only open-source resources.
+          We do not require user accounts, authentication, cookies, or analytics trackers, and we do
+          not store personal data, prompts, or query histories on any database.
+        </p>
+      </article>
+
+      <article class="card" style="margin-block-end: 1.5rem;">
+        <h2>2. How MCP Requests Are Processed</h2>
+        <p>
+          The hosted MCP server at <code>https://mcp.awesome-aeco.org/mcp</code> runs as a stateless
+          Cloudflare Worker. Incoming tool calls (<code>search_tools</code>, <code>get_tool</code>,
+          <code>list_categories</code>, <code>list_tags</code>, and <code>get_movers</code>) are
+          evaluated in memory against the public <code>catalog.json</code> dataset and returned
+          directly to your AI client. No request payloads are persisted to third-party services.
+        </p>
+      </article>
+
+      <article class="card" style="margin-block-end: 1.5rem;">
+        <h2>3. Infrastructure Logs</h2>
+        <p>
+          Our static site is hosted on GitHub Pages and the remote MCP endpoint is hosted on
+          Cloudflare Workers. Both infrastructure providers may process standard transient network
+          metadata (such as IP address, HTTP status codes, and latency metrics) for security,
+          DDoS protection, and operational observability under their respective privacy policies.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>4. Contact &amp; Support</h2>
+        <p>
+          Questions or privacy requests can be opened via
+          <a href="https://github.com/awesome-aeco/awesome-aeco-mcp/issues" rel="noopener noreferrer">
+            GitHub Issues
+          </a>
+          or by contacting the maintainer listed on
+          <a href="https://github.com/awesome-aeco/Awesome-AECO" rel="noopener noreferrer">
+            github.com/awesome-aeco/Awesome-AECO
+          </a>.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
