@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCatalog } from '../../lib/data';
+
+const catalog = loadCatalog();
+const catalogUrl = 'https://awesome-aeco.github.io/data/catalog.json';
+const llmsUrl = 'https://awesome-aeco.github.io/llms.txt';
+const curlSnippet = `curl -s ${catalogUrl} | jq '.entries[] | select(.tags | index("IFC")) | {name, github_url, stars: .github.stars}'`;
+---
+
+<BaseLayout
+  title="AI & Developer Hub — Awesome AECO"
+  description="Machine-readable catalog.json endpoint, llms.txt index, and AI agent contribution workflows for Awesome AECO."
+  canonicalPath="/ai/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>For AI Agents &amp; Developers</h1>
+      <p>
+        Awesome AECO is built to be consumed cleanly by both humans and autonomous agents. Query
+        the structured catalog directly or automate pull requests using the built-in agent instructions.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="margin-block-end: 2rem;">
+        <article class="card">
+          <span class="pill pill-brand">CC BY 4.0</span>
+          <h2>Static JSON Catalog</h2>
+          <p>
+            Enriched weekly with GitHub stars, star deltas, primary languages, licenses, topics,
+            domain tags, and archived status for all {catalog.stats.total_entries} entries.
+          </p>
+          <div class="copy-bar" style="margin-block-start: 0.5rem;">
+            <code id="catalog-url">{catalogUrl}</code>
+            <span class="copy">
+              <button
+                type="button"
+                class="copy-button"
+                command="--copy"
+                commandfor="catalog-url"
+              >
+                Copy URL
+              </button>
+              <span class="tip" role="status"></span>
+            </span>
+          </div>
+          <a class="card-link" href="/data/catalog.json">Open catalog.json &rarr;</a>
+        </article>
+
+        <article class="card">
+          <span class="pill">Agent Discovery</span>
+          <h2>llms.txt Index</h2>
+          <p>
+            A concise Markdown index pointing coding agents and LLM crawlers directly to the raw
+            list, JSON catalog, contribution rules, and prompt templates.
+          </p>
+          <div class="copy-bar" style="margin-block-start: 0.5rem;">
+            <code id="llms-url">{llmsUrl}</code>
+            <span class="copy">
+              <button
+                type="button"
+                class="copy-button"
+                command="--copy"
+                commandfor="llms-url"
+              >
+                Copy URL
+              </button>
+              <span class="tip" role="status"></span>
+            </span>
+          </div>
+          <a class="card-link" href="/llms.txt">Open llms.txt &rarr;</a>
+        </article>
+      </div>
+
+      <div class="card" style="margin-block-end: 2rem;">
+        <div class="copy-bar">
+          <h2 style="margin: 0; font-size: 1.2rem;">Quick Query Example (IFC Tools)</h2>
+          <span class="copy">
+            <button
+              type="button"
+              class="copy-button"
+              command="--copy"
+              commandfor="curl-example"
+            >
+              Copy Command
+            </button>
+            <span class="tip" role="status"></span>
+          </span>
+        </div>
+        <pre><code id="curl-example">{curlSnippet}</code></pre>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Agent Contribution Workflow</h3>
+          <p>
+            Use <code>AGENTS.md</code> and the ready-made <code>prompts/add-entry.md</code> template
+            to have an AI coding agent verify a repository, check for duplicates, and open a compliant PR.
+          </p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a
+              class="card-link"
+              href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/AGENTS.md"
+              rel="noopener noreferrer"
+            >
+              Read AGENTS.md &rarr;
+            </a>
+            <a
+              class="card-link"
+              href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/prompts/add-entry.md"
+              rel="noopener noreferrer"
+            >
+              Add-Entry Prompt &rarr;
+            </a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="pill">Roadmap · P3.1</span>
+          <h3>awesome-aeco-mcp</h3>
+          <p>
+            An upcoming Model Context Protocol (MCP) server wrapping <code>catalog.json</code> so
+            AI assistants can search AECO tools by capability, license, language, and open standard.
+          </p>
+          <a
+            class="card-link"
+            href="https://github.com/awesome-aeco/Awesome-AECO"
+            rel="noopener noreferrer"
+          >
+            Follow progress on GitHub &rarr;
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { initCopyButtons } from '../../scripts/copy-button';
+    initCopyButtons();
+  </script>
+</BaseLayout>

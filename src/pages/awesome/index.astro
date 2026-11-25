@@ -1,0 +1,386 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCatalog, loadFaqFromReadme, formatShortStars } from '../../lib/data';
+
+const catalog = loadCatalog();
+const faqItems = loadFaqFromReadme();
+
+const languages = Array.from(
+  new Set(
+    catalog.entries
+      .map((e) => e.github?.language)
+      .filter((v): v is string => Boolean(v))
+  )
+).sort((a, b) => a.localeCompare(b));
+
+const licenses = Array.from(
+  new Set(
+    catalog.entries
+      .map((e) => e.github?.license)
+      .filter((v): v is string => Boolean(v) && v !== 'NOASSERTION')
+  )
+).sort((a, b) => a.localeCompare(b));
+
+const tagCounts = new Map<string, number>();
+for (const entry of catalog.entries) {
+  for (const tag of entry.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const topTags = Array.from(tagCounts.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(([tag]) => tag);
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Awesome AECO Directory',
+  description:
+    'A curated list of open-source tools, libraries, and resources for Architecture, Engineering, Construction, and Operations (AECO).',
+  url: 'https://awesome-aeco.github.io/awesome/',
+  license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  numberOfItems: catalog.entries.length,
+  itemListElement: catalog.entries.map((entry, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'SoftwareApplication',
+      name: entry.name,
+      description: entry.description,
+      url: entry.github_url ?? entry.website,
+      applicationCategory: entry.category,
+    },
+  })),
+};
+
+const faqSchema =
+  faqItems.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        name: 'Awesome AECO FAQ',
+        url: 'https://awesome-aeco.github.io/awesome/#faq',
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+
+const schemas = faqSchema ? [itemListSchema, faqSchema] : [itemListSchema];
+---
+
+<BaseLayout
+  title="Awesome AECO Directory — Searchable Open-Source AECO Tools"
+  description={`Search and filter ${catalog.stats.total_entries} curated open-source tools across ${catalog.stats.categories} AECO categories by language, license, and open standards.`}
+  canonicalPath="/awesome/"
+  jsonLd={schemas}
+>
+  <header class="page-header">
+    <div class="container">
+      <div class="section-header" style="margin-block-end: 0.75rem;">
+        <h1>Awesome AECO Directory</h1>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a
+            class="btn btn-primary btn-sm"
+            href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/contributing.md"
+            rel="noopener noreferrer"
+          >
+            Submit a Tool (PR)
+          </a>
+          <a
+            class="btn btn-secondary btn-sm"
+            href="https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/readme.md"
+            rel="noopener noreferrer"
+          >
+            Raw Markdown
+          </a>
+          <a class="btn btn-secondary btn-sm" href="/data/catalog.json">
+            catalog.json
+          </a>
+        </div>
+      </div>
+      <p>
+        {catalog.stats.total_entries} curated open-source tools across {catalog.stats.categories}{' '}
+        categories. Backed by{' '}
+        <a href="https://github.com/awesome-aeco/Awesome-AECO" rel="noopener noreferrer">
+          awesome-aeco/Awesome-AECO
+        </a>{' '}
+        and enriched weekly with GitHub metadata.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="filter-bar" role="search" aria-label="Filter AECO tools">
+        <div class="field">
+          <label for="dir-search">Search tools</label>
+          <input
+            id="dir-search"
+            type="search"
+            placeholder="Search by name, description, IFC, Python, Revit, GIS..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="filter-row">
+          <div class="field">
+            <label for="dir-category">Category</label>
+            <select id="dir-category">
+              <option value="">All categories ({catalog.categories.length})</option>
+              {catalog.categories.map((cat) => (
+                <option value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="dir-language">Language</label>
+            <select id="dir-language">
+              <option value="">All languages</option>
+              {languages.map((lang) => (
+                <option value={lang}>{lang}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="dir-license">License</label>
+            <select id="dir-license">
+              <option value="">All licenses</option>
+              {licenses.map((lic) => (
+                <option value={lic}>{lic}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="dir-sort">Sort by</label>
+            <select id="dir-sort">
+              <option value="curated">Curated order</option>
+              <option value="stars">Most starred</option>
+              <option value="name">Name (A–Z)</option>
+              <option value="recent">Recently updated</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="chip-row" role="group" aria-label="Filter by standard or domain tag">
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
+            Standards &amp; tags:
+          </span>
+          {topTags.map((tag) => (
+            <button type="button" class="chip-btn" data-tag={tag} aria-pressed="false">
+              {tag}
+            </button>
+          ))}
+          <button
+            type="button"
+            id="dir-reset"
+            class="btn btn-secondary btn-sm"
+            style="margin-inline-start: auto;"
+          >
+            Reset filters
+          </button>
+        </div>
+      </div>
+
+      <div class="directory-meta">
+        <div id="dir-count" role="status" aria-live="polite">
+          Showing {catalog.entries.length} of {catalog.entries.length} tools
+        </div>
+        <div>Last updated: {catalog.generated_at.slice(0, 10)}</div>
+      </div>
+
+      <div id="dir-grid" class="tool-grid">
+        {catalog.entries.map((entry, idx) => {
+          const stars = entry.github?.stars ?? -1;
+          const lang = entry.github?.language ?? '';
+          const lic = entry.github?.license ?? '';
+          const pushed = entry.github?.pushed_at ?? '';
+          const archived = entry.github?.archived ?? false;
+          const searchBlob = [
+            entry.name,
+            entry.description,
+            entry.category,
+            lang,
+            lic,
+            ...entry.tags,
+            ...(entry.github?.topics ?? []),
+          ]
+            .join(' ')
+            .toLowerCase();
+
+          return (
+            <article
+              class="tool-card"
+              data-index={idx}
+              data-name={entry.name.toLowerCase()}
+              data-category={entry.category}
+              data-language={lang}
+              data-license={lic}
+              data-tags={entry.tags.join('|')}
+              data-stars={stars}
+              data-pushed={pushed}
+              data-search={searchBlob}
+            >
+              <div class="tool-card-top">
+                <h3>{entry.name}</h3>
+                {stars >= 0 && (
+                  <span class="star-badge" title={`${stars} GitHub stars`}>
+                    ★ {formatShortStars(stars)}
+                  </span>
+                )}
+              </div>
+
+              <p class="tool-desc">{entry.description}</p>
+
+              <div class="tool-tags">
+                <span class="pill pill-brand">{entry.category}</span>
+                {lang && <span class="pill">{lang}</span>}
+                {lic && lic !== 'NOASSERTION' && <span class="pill">{lic}</span>}
+                {entry.tags.slice(0, 3).map((tag) => (
+                  <span class="pill">{tag}</span>
+                ))}
+                {archived && <span class="pill pill-warn">Archived</span>}
+              </div>
+
+              <div class="tool-links">
+                {entry.github_url && (
+                  <a href={entry.github_url} rel="noopener noreferrer">
+                    GitHub &rarr;
+                  </a>
+                )}
+                {entry.website && (
+                  <a href={entry.website} rel="noopener noreferrer">
+                    Website &rarr;
+                  </a>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {faqItems.length > 0 && (
+        <section id="faq" class="section" style="padding-block-end: 0;">
+          <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+          </div>
+          <div class="faq-list">
+            {faqItems.map((item) => (
+              <details class="faq-item">
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </section>
+
+  <script>
+    const searchInput = document.getElementById('dir-search') as HTMLInputElement | null;
+    const categorySelect = document.getElementById('dir-category') as HTMLSelectElement | null;
+    const languageSelect = document.getElementById('dir-language') as HTMLSelectElement | null;
+    const licenseSelect = document.getElementById('dir-license') as HTMLSelectElement | null;
+    const sortSelect = document.getElementById('dir-sort') as HTMLSelectElement | null;
+    const resetBtn = document.getElementById('dir-reset') as HTMLButtonElement | null;
+    const countEl = document.getElementById('dir-count');
+    const grid = document.getElementById('dir-grid');
+    const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.chip-btn[data-tag]'));
+    const cards = grid ? Array.from(grid.querySelectorAll<HTMLElement>('.tool-card')) : [];
+
+    const activeTags = new Set<string>();
+
+    function applyFilters(): void {
+      if (!grid) return;
+      const query = (searchInput?.value ?? '').trim().toLowerCase();
+      const cat = categorySelect?.value ?? '';
+      const lang = languageSelect?.value ?? '';
+      const lic = licenseSelect?.value ?? '';
+      const sortBy = sortSelect?.value ?? 'curated';
+
+      const visibleCards: HTMLElement[] = [];
+
+      for (const card of cards) {
+        const matchesQuery = !query || (card.dataset.search ?? '').includes(query);
+        const matchesCat = !cat || card.dataset.category === cat;
+        const matchesLang = !lang || card.dataset.language === lang;
+        const matchesLic = !lic || card.dataset.license === lic;
+
+        let matchesTags = true;
+        if (activeTags.size > 0) {
+          const cardTags = new Set((card.dataset.tags ?? '').split('|').filter(Boolean));
+          for (const t of activeTags) {
+            if (!cardTags.has(t)) {
+              matchesTags = false;
+              break;
+            }
+          }
+        }
+
+        const show = matchesQuery && matchesCat && matchesLang && matchesLic && matchesTags;
+        card.hidden = !show;
+        if (show) visibleCards.push(card);
+      }
+
+      if (sortBy === 'stars') {
+        cards.sort((a, b) => Number(b.dataset.stars ?? -1) - Number(a.dataset.stars ?? -1));
+      } else if (sortBy === 'name') {
+        cards.sort((a, b) => (a.dataset.name ?? '').localeCompare(b.dataset.name ?? ''));
+      } else if (sortBy === 'recent') {
+        cards.sort((a, b) => (b.dataset.pushed ?? '').localeCompare(a.dataset.pushed ?? ''));
+      } else {
+        cards.sort((a, b) => Number(a.dataset.index ?? 0) - Number(b.dataset.index ?? 0));
+      }
+
+      const fragment = document.createDocumentFragment();
+      for (const card of cards) fragment.appendChild(card);
+      grid.appendChild(fragment);
+
+      if (countEl) {
+        countEl.textContent = `Showing ${visibleCards.length} of ${cards.length} tools`;
+      }
+    }
+
+    searchInput?.addEventListener('input', applyFilters);
+    categorySelect?.addEventListener('change', applyFilters);
+    languageSelect?.addEventListener('change', applyFilters);
+    licenseSelect?.addEventListener('change', applyFilters);
+    sortSelect?.addEventListener('change', applyFilters);
+
+    for (const btn of tagButtons) {
+      btn.addEventListener('click', () => {
+        const tag = btn.dataset.tag;
+        if (!tag) return;
+        if (activeTags.has(tag)) {
+          activeTags.delete(tag);
+          btn.setAttribute('aria-pressed', 'false');
+        } else {
+          activeTags.add(tag);
+          btn.setAttribute('aria-pressed', 'true');
+        }
+        applyFilters();
+      });
+    }
+
+    resetBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      if (categorySelect) categorySelect.value = '';
+      if (languageSelect) languageSelect.value = '';
+      if (licenseSelect) licenseSelect.value = '';
+      if (sortSelect) sortSelect.value = 'curated';
+      activeTags.clear();
+      for (const btn of tagButtons) btn.setAttribute('aria-pressed', 'false');
+      applyFilters();
+    });
+  </script>
+</BaseLayout>

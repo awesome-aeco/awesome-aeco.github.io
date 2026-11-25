@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About & Governance — Awesome AECO"
+  description="Mission, editorial independence, licensing split, and contribution guidelines for Awesome AECO."
+  canonicalPath="/about/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>About Awesome AECO</h1>
+      <p>
+        Awesome AECO is a community-curated, open-source directory and ecosystem hub for
+        Architecture, Engineering, Construction, and Operations.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="margin-block-end: 2rem;">
+        <article class="card">
+          <h2>Editorial Independence</h2>
+          <p>
+            Listings are never sold. Every project in <a href="/awesome/">the directory</a> is
+            reviewed against public inclusion criteria: real utility for the built environment,
+            working public links, and active or historically meaningful open-source code.
+          </p>
+          <p>
+            Strict CI linting and automated link checking keep the list accurate and machine-parseable.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Licensing &amp; Brand Split</h2>
+          <p>
+            <strong>Curated list (<code>readme.md</code>):</strong> Public domain under{' '}
+            <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener noreferrer">
+              CC0 1.0 Universal
+            </a>{' '}
+            for full compatibility with the Awesome Lists ecosystem.
+          </p>
+          <p>
+            <strong>Enriched dataset (<code>catalog.json</code>):</strong>{' '}
+            <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">
+              CC BY 4.0
+            </a>.{' '}
+            <strong>Brand assets:</strong> Protected under{' '}
+            <a
+              href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/TRADEMARK.md"
+              rel="noopener noreferrer"
+            >
+              TRADEMARK.md
+            </a>.
+          </p>
+        </article>
+      </div>
+
+      <div id="contribute" class="grid-2">
+        <article class="card">
+          <h2>How to Contribute</h2>
+          <p>
+            Open one pull request per resource on{' '}
+            <a href="https://github.com/awesome-aeco/Awesome-AECO" rel="noopener noreferrer">
+              awesome-aeco/Awesome-AECO
+            </a>{' '}
+            following the 3-line entry format in <code>contributing.md</code>. Every merged PR
+            automatically triggers a rebuild of this site.
+          </p>
+          <a
+            class="card-link"
+            href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/contributing.md"
+            rel="noopener noreferrer"
+          >
+            Read Contribution Guidelines &rarr;
+          </a>
+        </article>
+
+        <article class="card">
+          <h2>Maintainer</h2>
+          <p>
+            Created and maintained by{' '}
+            <a href="https://osamata.com/" rel="noopener noreferrer">Osama Ata</a> alongside
+            contributors from the open-source AECO and openBIM communities.
+          </p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a class="card-link" href="https://osamata.com/" rel="noopener noreferrer">
+              osamata.com &rarr;
+            </a>
+            <a class="card-link" href="https://github.com/osama-ata" rel="noopener noreferrer">
+              GitHub (@osama-ata) &rarr;
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

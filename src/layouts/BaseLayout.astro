@@ -1,0 +1,110 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  jsonLd = [],
+} = Astro.props;
+
+const siteUrl = 'https://awesome-aeco.github.io';
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const ogImage = `${siteUrl}/brand/og-card.png`;
+
+const navLinks = [
+  { href: '/awesome/', label: 'Directory' },
+  { href: '/movers/', label: 'Movers' },
+  { href: '/ai/', label: 'AI & Data' },
+  { href: '/brand/', label: 'Brand' },
+  { href: '/about/', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/brand/icon.svg" />
+    <link rel="icon" type="image/png" href="/brand/icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {jsonLd.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand-link" href="/">
+          <img src="/brand/icon.svg" alt="" width="28" height="28" />
+          <span>Awesome AECO</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              aria-current={currentPath === link.href ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="https://github.com/awesome-aeco/Awesome-AECO"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>Awesome AECO</strong> — Open-source resources for Architecture, Engineering, Construction &amp; Operations.
+          Curated by <a href="https://osamata.com/" rel="noopener noreferrer">Osama Ata</a>.
+        </div>
+        <div class="footer-links">
+          <a href="/awesome/">Directory</a>
+          <a href="/data/catalog.json">catalog.json</a>
+          <a href="/llms.txt">llms.txt</a>
+          <a href="/brand/">Brand Kit</a>
+          <a href="https://github.com/awesome-aeco/Awesome-AECO" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

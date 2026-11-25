@@ -1,0 +1,194 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadCatalog, formatNumber } from '../lib/data';
+
+const catalog = loadCatalog();
+
+const withDelta = catalog.entries
+  .filter((e) => (e.github?.stars_delta ?? 0) > 0)
+  .sort((a, b) => (b.github?.stars_delta ?? 0) - (a.github?.stars_delta ?? 0));
+
+const topMovers = (
+  withDelta.length > 0
+    ? withDelta
+    : [...catalog.entries]
+        .filter((e) => (e.github?.stars ?? 0) > 0)
+        .sort((a, b) => (b.github?.stars ?? 0) - (a.github?.stars ?? 0))
+).slice(0, 5);
+
+const hasDeltas = withDelta.length > 0;
+const updatedDate = catalog.generated_at.slice(0, 10);
+
+const webSiteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://www.wikidata.org/wiki/Q132189472',
+      name: 'Osama Ata',
+      url: 'https://osamata.com/',
+      sameAs: [
+        'https://www.wikidata.org/wiki/Q132189472',
+        'https://github.com/osama-ata',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      name: 'Awesome AECO',
+      url: 'https://awesome-aeco.github.io/',
+      description:
+        'The open-source hub and curated directory for Architecture, Engineering, Construction, and Operations (AECO).',
+      license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+      sameAs: 'https://github.com/awesome-aeco/Awesome-AECO',
+      author: { '@id': 'https://www.wikidata.org/wiki/Q132189472' },
+      publisher: { '@id': 'https://www.wikidata.org/wiki/Q132189472' },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Awesome AECO — Open-Source Hub for Architecture, Engineering, Construction & Operations"
+  description="The open-source ecosystem and curated directory for AECO: BIM, IFC, CAD, simulation, energy, parametric design, construction robotics, digital twins, and GIS."
+  canonicalPath="/"
+  jsonLd={[webSiteSchema]}
+>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Open-Source Built Environment Ecosystem</div>
+      <h1>The Open-Source Hub for Architecture, Engineering, Construction &amp; Operations</h1>
+      <p class="hero-lead">
+        Curated open-source BIM, IFC, CAD, simulation, energy, robotics, GIS, and AI tools—maintained
+        in the open, enriched weekly, and free of pay-to-play listings.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/awesome/">Browse the Directory &rarr;</a>
+        <a class="btn btn-secondary" href="/ai/">API &amp; AI Agents</a>
+        <a
+          class="btn btn-secondary"
+          href="https://github.com/awesome-aeco/Awesome-AECO"
+          rel="noopener noreferrer"
+        >
+          Star on GitHub
+        </a>
+      </div>
+
+      <div class="stats-strip" aria-label="Catalog statistics">
+        <div class="stat-box">
+          <span class="stat-value">{formatNumber(catalog.stats.total_entries)}</span>
+          <span class="stat-label">Curated Tools</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value">{catalog.stats.categories}</span>
+          <span class="stat-label">AECO Categories</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value">{formatNumber(catalog.stats.github_repos)}</span>
+          <span class="stat-label">GitHub Repositories</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value">{updatedDate}</span>
+          <span class="stat-label">Last Enriched</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Explore the Ecosystem</h2>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <span class="pill pill-brand">Interactive Directory</span>
+          <h3>Awesome AECO List</h3>
+          <p>
+            Search and filter {catalog.stats.total_entries} tools across {catalog.stats.categories} domains
+            by programming language, open-source license, and open standards (IFC, ISO 19650, IDS, BCF, CityGML).
+          </p>
+          <a class="card-link" href="/awesome/">Open Directory &rarr;</a>
+        </article>
+
+        <article class="card">
+          <span class="pill">Weekly Signal</span>
+          <h3>Movers &amp; Shakers</h3>
+          <p>
+            Automated weekly digest tracking GitHub star velocity, newly added AECO projects, and
+            archived repositories that need community review.
+          </p>
+          <a class="card-link" href="/movers/">View Weekly Movers &rarr;</a>
+        </article>
+
+        <article class="card">
+          <span class="pill">Machine-Readable</span>
+          <h3>For AI Agents &amp; Developers</h3>
+          <p>
+            Query the curated catalog directly via static <code>catalog.json</code>, <code>llms.txt</code>,
+            and structured agent contribution prompts.
+          </p>
+          <a class="card-link" href="/ai/">Developer &amp; AI Docs &rarr;</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-block-start: 0;">
+    <div class="container">
+      <div class="section-header">
+        <h2>{hasDeltas ? "This Week's Top Movers" : 'Top Starred Repositories'}</h2>
+        <a href="/movers/">Full movers digest &rarr;</a>
+      </div>
+
+      <ol class="mover-list">
+        {topMovers.map((entry, idx) => (
+          <li class="mover-item">
+            <div class="mover-main">
+              <span class="mover-rank">#{idx + 1}</span>
+              <a
+                href={entry.github_url ?? entry.website ?? '/awesome/'}
+                rel="noopener noreferrer"
+                style="font-weight: 700;"
+              >
+                {entry.name}
+              </a>
+              <span class="pill">{entry.category}</span>
+              {entry.github?.language && <span class="pill">{entry.github.language}</span>}
+            </div>
+            <div class="star-badge">
+              {hasDeltas && entry.github?.stars_delta
+                ? `+${formatNumber(entry.github.stars_delta)} (${formatNumber(entry.github.stars)} ★)`
+                : `${formatNumber(entry.github?.stars)} ★`}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" style="padding-block-start: 0;">
+    <div class="container">
+      <div class="grid-2">
+        <article class="card">
+          <h3>Featured in Awesome AECO?</h3>
+          <p>
+            If your project is listed in the directory, grab the official SVG badge and brand
+            guidelines to display in your repository README.
+          </p>
+          <a class="card-link" href="/brand/">Open Brand Kit &amp; Badges &rarr;</a>
+        </article>
+
+        <article class="card">
+          <h3>Editorial Independence</h3>
+          <p>
+            The curated list in <code>readme.md</code> is dedicated to the public domain under CC0 1.0,
+            with strict CI linting and zero pay-to-play placements.
+          </p>
+          <a class="card-link" href="/about/">Read Curation &amp; Governance Policy &rarr;</a>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

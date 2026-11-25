@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const badgeMarkdown = `[![Featured in Awesome AECO](https://awesome-aeco.github.io/badges/featured-in-awesome-aeco.svg)](https://awesome-aeco.github.io/awesome/)`;
+
+const colors = [
+  { name: 'Blueprint Blue', hex: '#0B6E99', role: 'Primary brand color, links, badges' },
+  { name: 'Drafting Cyan', hex: '#38BDF8', role: 'Dark-mode accent, wireframe highlights' },
+  { name: 'Structural Navy', hex: '#0F172A', role: 'Primary dark surface, light-mode headings' },
+  { name: 'Slate Concrete', hex: '#475569', role: 'Secondary text, subtle labels' },
+  { name: 'Paper Light', hex: '#F8FAFC', role: 'Light surface background' },
+  { name: 'Hairline Grid', hex: '#E2E8F0', role: 'Dividers, borders, subtle grid lines' },
+  { name: 'Verified Green', hex: '#15803D', role: 'Verified badge accent' },
+];
+---
+
+<BaseLayout
+  title="Brand Kit & Badges — Awesome AECO"
+  description="Official logos, color tokens, OpenGraph card, and embeddable badges for Awesome AECO."
+  canonicalPath="/brand/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>Brand Kit &amp; Badges</h1>
+      <p>
+        Official logos, color palette, and embeddable README badges for projects listed in Awesome AECO.
+        All brand assets are governed by{' '}
+        <a
+          href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/TRADEMARK.md"
+          rel="noopener noreferrer"
+        >
+          TRADEMARK.md
+        </a>{' '}
+        and are excluded from the CC0 1.0 dedication that applies to <code>readme.md</code>.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="card" style="margin-block-end: 2rem;">
+        <div class="copy-bar">
+          <div>
+            <h2 style="margin: 0 0 0.35rem; font-size: 1.25rem;">Featured in Awesome AECO Badge</h2>
+            <p style="margin: 0;">
+              Open to any project currently listed in the directory.
+            </p>
+          </div>
+          <img
+            src="/badges/featured-in-awesome-aeco.svg"
+            alt="Featured in Awesome AECO badge"
+            height="28"
+          />
+        </div>
+
+        <div class="copy-block">
+          <div class="copy-bar">
+            <span style="font-size: 0.84rem; color: var(--text-muted); font-weight: 600;">
+              Markdown snippet
+            </span>
+            <span class="copy">
+              <button
+                type="button"
+                class="copy-button"
+                command="--copy"
+                commandfor="badge-snippet"
+              >
+                Copy Markdown
+              </button>
+              <span class="tip" role="status"></span>
+            </span>
+          </div>
+          <pre><code id="badge-snippet">{badgeMarkdown}</code></pre>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <h2>Logos &amp; Social Assets</h2>
+      </div>
+      <div class="grid-2" style="margin-block-end: 2.5rem;">
+        <article class="card">
+          <h3>Light Wordmark</h3>
+          <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; display: grid; place-items: center;">
+            <img src="/brand/logo-light.svg" alt="Awesome AECO light wordmark" height="44" />
+          </div>
+          <a class="card-link" href="/brand/logo-light.svg" download>Download SVG &rarr;</a>
+        </article>
+
+        <article class="card">
+          <h3>Dark Wordmark</h3>
+          <div style="background: #0f172a; padding: 1.25rem; border-radius: 8px; border: 1px solid #25344f; display: grid; place-items: center;">
+            <img src="/brand/logo-dark.svg" alt="Awesome AECO dark wordmark" height="44" />
+          </div>
+          <a class="card-link" href="/brand/logo-dark.svg" download>Download SVG &rarr;</a>
+        </article>
+
+        <article class="card">
+          <h3>Square Icon</h3>
+          <div style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+            <img src="/brand/icon.svg" alt="Awesome AECO icon" width="56" height="56" />
+            <p>Used for favicons, GitHub org avatar, and app icons (512×512).</p>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <a class="card-link" href="/brand/icon.svg" download>Download SVG &rarr;</a>
+            <a class="card-link" href="/brand/icon.png" download>Download PNG &rarr;</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>OpenGraph Card (1200×630)</h3>
+          <img
+            src="/brand/og-card.png"
+            alt="Awesome AECO OpenGraph preview card"
+            style="width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border);"
+          />
+          <div style="display: flex; gap: 1rem;">
+            <a class="card-link" href="/brand/og-card.png" download>Download PNG &rarr;</a>
+            <a class="card-link" href="/brand/og-card.svg" download>Download SVG &rarr;</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="section-header">
+        <h2>Color Palette</h2>
+      </div>
+      <div class="swatch-grid">
+        {colors.map((c) => (
+          <div class="swatch">
+            <div class="swatch-color" style={`background: ${c.hex};`}></div>
+            <div class="swatch-info">
+              <strong>{c.name}</strong>
+              <code>{c.hex}</code>
+              <p style="margin: 0.35rem 0 0; font-size: 0.8rem; color: var(--text-muted);">
+                {c.role}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { initCopyButtons } from '../../scripts/copy-button';
+    initCopyButtons();
+  </script>
+</BaseLayout>

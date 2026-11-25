@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCatalog, formatNumber } from '../../lib/data';
+
+const catalog = loadCatalog();
+
+const rising = catalog.entries
+  .filter((e) => (e.github?.stars_delta ?? 0) > 0)
+  .sort((a, b) => (b.github?.stars_delta ?? 0) - (a.github?.stars_delta ?? 0))
+  .slice(0, 15);
+
+const topStarred = [...catalog.entries]
+  .filter((e) => (e.github?.stars ?? 0) > 0)
+  .sort((a, b) => (b.github?.stars ?? 0) - (a.github?.stars ?? 0))
+  .slice(0, 15);
+
+const newEntries = catalog.entries.filter((e) => e.is_new);
+const archivedEntries = catalog.entries.filter((e) => e.github?.archived);
+---
+
+<BaseLayout
+  title="Weekly Movers & Shakers — Awesome AECO"
+  description="Weekly snapshot of fastest-growing open-source AECO repositories, newly added tools, and archived projects needing review."
+  canonicalPath="/movers/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>Weekly Movers &amp; Shakers</h1>
+      <p>
+        Generated automatically from <code>data/catalog.json</code> on{' '}
+        <strong>{catalog.generated_at.slice(0, 10)}</strong> across{' '}
+        {formatNumber(catalog.stats.github_repos)} tracked GitHub repositories.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      {rising.length > 0 ? (
+        <div style="margin-block-end: 2.5rem;">
+          <div class="section-header">
+            <h2>Fastest-Growing This Week</h2>
+          </div>
+          <ol class="mover-list">
+            {rising.map((entry, idx) => (
+              <li class="mover-item">
+                <div class="mover-main">
+                  <span class="mover-rank">#{idx + 1}</span>
+                  <a href={entry.github_url ?? '#'} rel="noopener noreferrer" style="font-weight: 700;">
+                    {entry.name}
+                  </a>
+                  <span class="pill">{entry.category}</span>
+                  {entry.github?.language && <span class="pill">{entry.github.language}</span>}
+                </div>
+                <div class="star-badge">
+                  +{formatNumber(entry.github?.stars_delta)} ({formatNumber(entry.github?.stars)} ★)
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : (
+        <div style="margin-block-end: 2.5rem;">
+          <div class="section-header">
+            <h2>Baseline Snapshot — Top Starred Repositories</h2>
+          </div>
+          <p style="color: var(--text-muted); margin-block-start: -0.75rem; margin-block-end: 1.25rem;">
+            Weekly star-velocity deltas appear automatically after the next scheduled catalog run.
+          </p>
+          <ol class="mover-list">
+            {topStarred.map((entry, idx) => (
+              <li class="mover-item">
+                <div class="mover-main">
+                  <span class="mover-rank">#{idx + 1}</span>
+                  <a href={entry.github_url ?? '#'} rel="noopener noreferrer" style="font-weight: 700;">
+                    {entry.name}
+                  </a>
+                  <span class="pill">{entry.category}</span>
+                  {entry.github?.language && <span class="pill">{entry.github.language}</span>}
+                  {entry.github?.license && entry.github.license !== 'NOASSERTION' && (
+                    <span class="pill">{entry.github.license}</span>
+                  )}
+                </div>
+                <div class="star-badge">{formatNumber(entry.github?.stars)} ★</div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {newEntries.length > 0 && (
+        <div style="margin-block-end: 2.5rem;">
+          <div class="section-header">
+            <h2>Newly Added Tools</h2>
+          </div>
+          <ul class="mover-list">
+            {newEntries.map((entry) => (
+              <li class="mover-item">
+                <div class="mover-main">
+                  <span class="pill pill-brand">New</span>
+                  <a
+                    href={entry.github_url ?? entry.website ?? '/awesome/'}
+                    rel="noopener noreferrer"
+                    style="font-weight: 700;"
+                  >
+                    {entry.name}
+                  </a>
+                  <span class="pill">{entry.category}</span>
+                </div>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">{entry.description}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {archivedEntries.length > 0 && (
+        <div>
+          <div class="section-header">
+            <h2>Archived Repositories (Review Needed)</h2>
+          </div>
+          <ul class="mover-list">
+            {archivedEntries.map((entry) => (
+              <li class="mover-item">
+                <div class="mover-main">
+                  <span class="pill pill-warn">Archived</span>
+                  <a href={entry.github_url ?? '#'} rel="noopener noreferrer" style="font-weight: 700;">
+                    {entry.name}
+                  </a>
+                  <span class="pill">{entry.category}</span>
+                </div>
+                <a
+                  href="https://github.com/awesome-aeco/Awesome-AECO/issues"
+                  rel="noopener noreferrer"
+                  style="font-size: 0.88rem; font-weight: 600;"
+                >
+                  Propose replacement &rarr;
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

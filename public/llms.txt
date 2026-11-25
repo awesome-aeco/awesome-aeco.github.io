@@ -1,0 +1,24 @@
+# Awesome AECO
+
+> The open-source hub for Architecture, Engineering, Construction and Operations (AECO): BIM and IFC, CAD, Revit plugins, simulation and analysis, parametric and computational design, IoT and smart buildings, facility and asset management, generative design, construction robotics, digital twins, GIS, project management, and cost estimation.
+
+## Directory & Machine-Readable Data
+
+- [Awesome AECO Directory (web)](https://awesome-aeco.github.io/awesome/): Searchable, filterable web directory of 212+ curated AECO tools.
+- [Structured Catalog (JSON)](https://awesome-aeco.github.io/data/catalog.json): Enriched JSON dataset with GitHub stars, licenses, primary languages, tags, and archived status (CC BY 4.0).
+- [readme.md (raw Markdown)](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/readme.md): Canonical curated list in plain Markdown (CC0 1.0).
+- [Weekly Movers & Shakers](https://awesome-aeco.github.io/movers/): Weekly star velocity, new additions, and archived repo alerts.
+
+## For AI Agents & Contributors
+
+- [AI & Developer Hub](https://awesome-aeco.github.io/ai/): Integration guide for `catalog.json`, `llms.txt`, and upcoming MCP server.
+- [Agent instructions](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/AGENTS.md): Rules and checklists for AI agents proposing changes.
+- [Contribution guidelines](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/contributing.md): Inclusion criteria and exact 3-line entry format.
+- [Add-entry prompt template](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/prompts/add-entry.md): Ready-made prompt for verifying a resource and opening a PR.
+
+## Brand & Governance
+
+- [Brand Kit](https://awesome-aeco.github.io/brand/): Official logos, color tokens, OpenGraph card, and embeddable badges.
+- [Trademark & Brand Policy](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/TRADEMARK.md): Usage terms for the Awesome AECO name, logos, and badges.
+- [Repository](https://github.com/awesome-aeco/Awesome-AECO): Source list, issues, and pull requests.
+- [License (CC0 1.0)](https://raw.githubusercontent.com/awesome-aeco/Awesome-AECO/main/LICENSE): Public-domain dedication for the curated list content.
