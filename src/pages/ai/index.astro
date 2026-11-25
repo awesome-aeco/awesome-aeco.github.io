@@ -5,6 +5,19 @@ import { loadCatalog } from '../../lib/data';
 const catalog = loadCatalog();
 const catalogUrl = 'https://awesome-aeco.github.io/data/catalog.json';
 const llmsUrl = 'https://awesome-aeco.github.io/llms.txt';
+const mcpUrl = 'https://awesome-aeco-mcp.eng-superosama.workers.dev/mcp';
+const mcpConfigSnippet = JSON.stringify(
+  {
+    mcpServers: {
+      'awesome-aeco': {
+        command: 'npx',
+        args: ['-y', 'awesome-aeco-mcp'],
+      },
+    },
+  },
+  null,
+  2
+);
 const curlSnippet = `curl -s ${catalogUrl} | jq '.entries[] | select(.tags | index("IFC")) | {name, github_url, stars: .github.stars}'`;
 ---
 
@@ -119,19 +132,44 @@ const curlSnippet = `curl -s ${catalogUrl} | jq '.entries[] | select(.tags | ind
         </article>
 
         <article class="card">
-          <span class="pill">Roadmap · P3.1</span>
+          <span class="pill pill-brand">Live · MCP</span>
           <h3>awesome-aeco-mcp</h3>
           <p>
-            An upcoming Model Context Protocol (MCP) server wrapping <code>catalog.json</code> so
-            AI assistants can search AECO tools by capability, license, language, and open standard.
+            Model Context Protocol (MCP) server wrapping <code>catalog.json</code> with
+            <code>search_tools</code>, <code>get_tool</code>, <code>list_categories</code>,
+            <code>list_tags</code>, and <code>get_movers</code>.
           </p>
-          <a
-            class="card-link"
-            href="https://github.com/awesome-aeco/Awesome-AECO"
-            rel="noopener noreferrer"
-          >
-            Follow progress on GitHub &rarr;
-          </a>
+          <div class="copy-bar" style="margin-block-start: 0.5rem;">
+            <code id="mcp-url">{mcpUrl}</code>
+            <span class="copy">
+              <button
+                type="button"
+                class="copy-button"
+                command="--copy"
+                commandfor="mcp-url"
+              >
+                Copy URL
+              </button>
+              <span class="tip" role="status"></span>
+            </span>
+          </div>
+          <pre style="margin-block-start: 0.75rem;"><code id="mcp-config">{mcpConfigSnippet}</code></pre>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a
+              class="card-link"
+              href="https://github.com/awesome-aeco/awesome-aeco-mcp"
+              rel="noopener noreferrer"
+            >
+              GitHub Repo &rarr;
+            </a>
+            <a
+              class="card-link"
+              href="https://www.npmjs.com/package/awesome-aeco-mcp"
+              rel="noopener noreferrer"
+            >
+              npm Package &rarr;
+            </a>
+          </div>
         </article>
       </div>
     </div>
