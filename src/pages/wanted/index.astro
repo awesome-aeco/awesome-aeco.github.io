@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCatalog, formatNumber, type CatalogEntry } from '../../lib/data';
+
+const catalog = loadCatalog();
+const activeEntries = catalog.entries.filter((e) => !e.github?.archived);
+
+interface DomainMatrix {
+  title: string;
+  subtitle: string;
+  entries: CatalogEntry[];
+}
+
+function pickEntries(predicate: (e: CatalogEntry) => boolean, limit = 8): CatalogEntry[] {
+  return activeEntries
+    .filter(predicate)
+    .sort((a, b) => (b.github?.stars ?? -1) - (a.github?.stars ?? -1))
+    .slice(0, limit);
+}
+
+const matrices: DomainMatrix[] = [
+  {
+    title: 'IFC Parsing, Viewing & Geometry',
+    subtitle: 'Check these maintained open-source engines before building a custom IFC parser or viewer.',
+    entries: pickEntries(
+      (e) =>
+        e.category.startsWith('BIM') &&
+        (e.tags.includes('IFC') || /\bifc\b/i.test(`${e.name} ${e.description}`))
+    ),
+  },
+  {
+    title: 'DWG / DXF Reading, Converting & Viewing',
+    subtitle: 'Existing libraries and browser viewers for CAD drawing exchange.',
+    entries: pickEntries(
+      (e) => /\b(dwg|dxf)\b/i.test(`${e.name} ${e.description}`)
+    ),
+  },
+  {
+    title: 'Revit Automation & MCP Servers',
+    subtitle: 'Active open-source Revit add-ins, API toolkits, and Model Context Protocol servers.',
+    entries: pickEntries(
+      (e) =>
+        e.category.startsWith('Revit') ||
+        (/\brevit\b/i.test(`${e.name} ${e.description}`) && /\bmcp\b/i.test(`${e.name} ${e.description}`))
+    ),
+  },
+  {
+    title: 'Building Energy & Environmental Simulation',
+    subtitle: 'Open-source engines, wrappers, and MCP tools for EnergyPlus, daylighting, and HVAC modeling.',
+    entries: pickEntries(
+      (e) =>
+        e.category.startsWith('Energy') ||
+        /\b(energyplus|openstudio|radiance|daylight)\b/i.test(`${e.name} ${e.description}`)
+    ),
+  },
+  {
+    title: 'Smart Buildings & BMS Protocols (BACnet, Modbus, OPC UA, Matter)',
+    subtitle: 'Protocol stacks, SCADA/HMI dashboards, and IoT platforms for building operations.',
+    entries: pickEntries(
+      (e) => e.category.startsWith('IoT')
+    ),
+  },
+];
+---
+
+<BaseLayout
+  title="Before You Build & Wanted in AECO — Awesome AECO"
+  description="Compare maintained open-source AECO libraries by language and license before building from scratch, and browse open community tool requests."
+  canonicalPath="/wanted/"
+>
+  <header class="page-header">
+    <div class="container">
+      <h1>Before You Build &amp; Wanted in AECO</h1>
+      <p>
+        Stop reinventing the wheel: compare active open-source AECO libraries by language and license
+        before starting a new project—or browse and log real unmet gaps for the community to build next.
+      </p>
+      <div class="cta-row" style="margin-block-start: 1.25rem;">
+        <a
+          class="btn btn-primary"
+          href="https://github.com/awesome-aeco/Awesome-AECO/issues/new?template=wanted-tool.yml"
+          rel="noopener noreferrer"
+        >
+          Request a Missing Tool &rarr;
+        </a>
+        <a
+          class="btn btn-secondary"
+          href="https://github.com/awesome-aeco/Awesome-AECO/issues/new?template=suggest-resource.yml"
+          rel="noopener noreferrer"
+        >
+          Submit a Tool You Built
+        </a>
+        <a class="btn btn-secondary" href="/ai/">
+          Connect MCP / Agent Skills
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Open "Wanted in AECO" Requests</h2>
+        <a
+          href="https://github.com/awesome-aeco/Awesome-AECO/issues?q=is%3Aissue+is%3Aopen+label%3Awanted"
+          rel="noopener noreferrer"
+        >
+          View all on GitHub &rarr;
+        </a>
+      </div>
+      <p style="color: var(--text-muted); margin-block-start: -0.75rem; margin-block-end: 1.25rem;">
+        Real gaps logged by AECO engineers and AI coding agents via <code>check_before_building</code>.
+        Looking for a high-impact open-source project to build? Pick one below.
+      </p>
+      <div id="wanted-list" class="card">
+        <p style="margin: 0; color: var(--text-muted);">Loading open community requests from GitHub...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-block-start: 0;">
+    <div class="container">
+      <div class="section-header">
+        <h2>Before You Build: Quick Comparison Matrices</h2>
+        <a href="/awesome/">Search all {catalog.stats.total_entries} tools &rarr;</a>
+      </div>
+      <p style="color: var(--text-muted); margin-block-start: -0.75rem; margin-block-end: 2rem;">
+        Auto-generated from <code>catalog.json</code> ({catalog.generated_at.slice(0, 10)}) across
+        the most frequently recreated AECO problem spaces. Archived repositories are excluded.
+      </p>
+
+      {matrices.map((matrix) => (
+        <div style="margin-block-end: 2.5rem;">
+          <h3 style="margin-block-end: 0.25rem;">{matrix.title}</h3>
+          <p style="color: var(--text-muted); margin-block-start: 0; margin-block-end: 1rem;">
+            {matrix.subtitle}
+          </p>
+          <ol class="mover-list">
+            {matrix.entries.map((entry) => (
+              <li class="mover-item">
+                <div class="mover-main">
+                  <a
+                    href={entry.github_url ?? entry.website ?? '/awesome/'}
+                    rel="noopener noreferrer"
+                    style="font-weight: 700;"
+                  >
+                    {entry.name}
+                  </a>
+                  {entry.github?.language && <span class="pill">{entry.github.language}</span>}
+                  {entry.github?.license && entry.github.license !== 'NOASSERTION' && (
+                    <span class="pill">{entry.github.license}</span>
+                  )}
+                </div>
+                <div class="star-badge">
+                  {entry.github?.stars ? `${formatNumber(entry.github.stars)} ★` : 'Web'}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    const container = document.getElementById('wanted-list');
+    const WANTED_URL =
+      'https://api.github.com/repos/awesome-aeco/Awesome-AECO/issues?labels=wanted&state=open&per_page=15';
+
+    async function loadWanted() {
+      if (!container) return;
+      try {
+        const res = await fetch(WANTED_URL, {
+          headers: { Accept: 'application/vnd.github+json' },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const issues = await res.json();
+        if (!Array.isArray(issues) || issues.length === 0) {
+          container.innerHTML =
+            '<p style="margin:0;">No open gaps logged yet. Can\'t find a maintained AECO tool? ' +
+            '<a href="https://github.com/awesome-aeco/Awesome-AECO/issues/new?template=wanted-tool.yml" rel="noopener noreferrer">Log the first Wanted request &rarr;</a></p>';
+          return;
+        }
+        const ul = document.createElement('ul');
+        ul.className = 'mover-list';
+        for (const issue of issues) {
+          const li = document.createElement('li');
+          li.className = 'mover-item';
+          const main = document.createElement('div');
+          main.className = 'mover-main';
+          const a = document.createElement('a');
+          a.href = issue.html_url;
+          a.rel = 'noopener noreferrer';
+          a.style.fontWeight = '700';
+          a.textContent = issue.title;
+          main.appendChild(a);
+          const meta = document.createElement('span');
+          meta.style.color = 'var(--text-muted)';
+          meta.style.fontSize = '0.85rem';
+          meta.textContent = `#${issue.number} · ${issue.comments} comment${issue.comments === 1 ? '' : 's'}`;
+          li.appendChild(main);
+          li.appendChild(meta);
+          ul.appendChild(li);
+        }
+        container.replaceWith(ul);
+      } catch {
+        container.innerHTML =
+          '<p style="margin:0;">Browse open gap requests directly on ' +
+          '<a href="https://github.com/awesome-aeco/Awesome-AECO/issues?q=is%3Aissue+is%3Aopen+label%3Awanted" rel="noopener noreferrer">GitHub Issues (label: wanted) &rarr;</a></p>';
+      }
+    }
+
+    loadWanted();
+  </script>
+</BaseLayout>
