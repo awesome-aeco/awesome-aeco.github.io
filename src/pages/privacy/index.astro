@@ -34,7 +34,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <p>
           The hosted MCP server at <code>https://mcp.awesome-aeco.org/mcp</code> runs as a stateless
           Cloudflare Worker. Incoming tool calls (<code>search_tools</code>, <code>get_tool</code>,
-          <code>list_categories</code>, <code>list_tags</code>, and <code>get_movers</code>) are
+          <code>list_categories</code>, <code>list_tags</code>, <code>get_movers</code>,
+          <code>check_before_building</code>, and <code>draft_submission</code>) are
           evaluated in memory against the public <code>catalog.json</code> dataset and returned
           directly to your AI client. No request payloads are persisted to third-party services.
         </p>
