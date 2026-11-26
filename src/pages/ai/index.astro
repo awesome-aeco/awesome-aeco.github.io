@@ -108,25 +108,34 @@ const curlSnippet = `curl -s ${catalogUrl} | jq '.entries[] | select(.tags | ind
 
       <div class="grid-2">
         <article class="card">
-          <h3>Agent Contribution Workflow</h3>
+          <span class="pill">Agent Skills · Forms</span>
+          <h3>Check Before Building &amp; Submit</h3>
           <p>
-            Use <code>AGENTS.md</code> and the ready-made <code>prompts/add-entry.md</code> template
-            to have an AI coding agent verify a repository, check for duplicates, and open a compliant PR.
+            Install the official Agent Skills (<code>npx skills add awesome-aeco/Awesome-AECO</code>)
+            so coding agents check existing AECO libraries before building from scratch and help you
+            list newly built tools. Or use the 1-minute GitHub Issue Forms (no Git required).
           </p>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a
+              class="card-link"
+              href="https://github.com/awesome-aeco/Awesome-AECO/issues/new?template=suggest-resource.yml"
+              rel="noopener noreferrer"
+            >
+              Submit a Tool &rarr;
+            </a>
+            <a
+              class="card-link"
+              href="https://github.com/awesome-aeco/Awesome-AECO/issues/new?template=wanted-tool.yml"
+              rel="noopener noreferrer"
+            >
+              Request a Missing Tool &rarr;
+            </a>
             <a
               class="card-link"
               href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/AGENTS.md"
               rel="noopener noreferrer"
             >
               Read AGENTS.md &rarr;
-            </a>
-            <a
-              class="card-link"
-              href="https://github.com/awesome-aeco/Awesome-AECO/blob/main/prompts/add-entry.md"
-              rel="noopener noreferrer"
-            >
-              Add-Entry Prompt &rarr;
             </a>
           </div>
         </article>
@@ -135,9 +144,12 @@ const curlSnippet = `curl -s ${catalogUrl} | jq '.entries[] | select(.tags | ind
           <span class="pill pill-brand">Live · MCP</span>
           <h3>awesome-aeco-mcp</h3>
           <p>
-            Model Context Protocol (MCP) server wrapping <code>catalog.json</code> with
-            <code>search_tools</code>, <code>get_tool</code>, <code>list_categories</code>,
-            <code>list_tags</code>, and <code>get_movers</code>.
+            Model Context Protocol (MCP) server wrapping <code>catalog.json</code> with tools
+            (<code>search_tools</code>, <code>check_before_building</code>,
+            <code>draft_submission</code>, <code>get_tool</code>, <code>list_categories</code>,
+            <code>list_tags</code>, <code>get_movers</code>), prompts
+            (<code>find-or-build-aeco-tool</code>, <code>add-after-you-build</code>), and embedded
+            Agent Skill resources.
           </p>
           <div class="copy-bar" style="margin-block-start: 0.5rem;">
             <code id="mcp-url">{mcpUrl}</code>
